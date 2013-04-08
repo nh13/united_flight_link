@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<script type="text/javascript">
+			var SITE="True";
+			var FLN="219";
+			var FLD="4/7/2013";
+			var FSO="ORD";
+			var FSD="HNL";
+			var LINK="";
+			var C_NAME="";
+			function update_link() {
+				FLN = document.getElementById("FLN").value;
+				FLD = document.getElementById("FLD").value;
+				FSO = document.getElementById("FSO").value;
+				FSO = FSO.toUpperCase();
+				FSD = document.getElementById("FSD").value;
+				FSD = FSD.toUpperCase();
+				if(document.getElementById("SITE_MOBILE").checked) {
+					SITE = "True";
+				} else {
+					SITE = "False"; 
+				}
+				if ("False" == SITE) {
+					LINK="https://www.united.com/web/en-US/apps/travel/flightstatus/results.aspx?FLN="+FLN+"&FLD="+FLD+"&FSO="+FSO+"&FSD="+FSD;
+				} 
+				else {
+					LINK="https://mobile.united.com/FlightStatus/UpgradeList?carrierCode=UA&flightNumber="+FLN+"&flightDate="+FLD+"&origin="+FSO+"&destination="+FSD;
+				}
+				c_name=SITE+"_"+FLN+"_"+FLD+"_"+FSO+"_"+FSD;
+				setCookie(c_name, LINK, 365);
+			};
+			function setCookie(c_name,value,exdays)
+			{
+				var exdate=new Date();
+				exdate.setDate(exdate.getDate() + exdays);
+				var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+				document.cookie=c_name + "=" + c_value;
+			};
+			function cookie_get_date(a) {
+				var c = a.split("=");
+				var name = c[0].replace(/^ /, '');
+				name = decodeURIComponent(name);
+				c = name.split("_");
+				var d = c[2];
+				c = d.split("/");
+				return [parseInt(c[2]), parseInt(c[0]), parseInt(c[1])]; // YYYY, MM, DD
+				
+			};
+			function cookie_sort_function(a, b) {
+				var a_date = cookie_get_date(a);
+				var b_date = cookie_get_date(b);
+				for (var i = 0; i <= 2; i++) {
+					if(a_date[i] < b_date[i]) {
+						return -1;
+					} else if(b_date[i] < a_date[i]) {
+						return 1;
+					}
+				}
+				return 0;
+			};
+			function get_cookies_array() {
+				var cookies_name = [];
+				var cookies_value = [];
+				if (document.cookie && document.cookie != '') {
+					var split = document.cookie.split(';');
+					split.sort(cookie_sort_function);
+					for (var i = 0; i < split.length; i++) {
+						var name_value = split[i].split("=");
+						name_value[0] = name_value[0].replace(/^ /, '');
+						cookies_name.push(decodeURIComponent(name_value[0]));
+						cookies_value.push(decodeURIComponent(name_value[1]));
+					}
+				}
+
+				return [cookies_name, cookies_value];
+			};
+			function delete_cookie() {
+				var c_name=C_NAME;
+				document.cookie = c_name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+			}
+			function delete_all_cookies() {
+				var cookies = document.cookie.split(";");
+				for (var i = 0; i < cookies.length; i++) {
+					var cookie = cookies[i];
+					var eqPos = cookie.indexOf("=");
+					var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+					document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+				}
+			}
+		</script>
+		<link rel="stylesheet" type="text/css" href="united_flight_link.css">
+		<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+		<title>Flight Status for UA</title>
+	</head>
+	<body>
+		<h1 class="pagetitle">Flight Status Tool for United Airlines</h1>
+		<p>
+		This tool is used to access the United Airlines flight status page before the link is available on the <a href="http://www.united.com">united.com</a> reservation page.
+		For example, to see those who have already been upgraded (miles, RPU, GPU, or CPU), and for those who are waiting for "battlefield" (at the gate) upgrades.
+		<br>
+		<p style="color:red"><b>
+		! If using the non-mobile site, please make sure you are logged into www.united.com before using this tool !
+		<br>
+		</b></p>
+		<form action="get">
+			<table class="main">
+				<tr>
+					<td class="main_heading">
+						Site:
+					</td>
+					<td>
+						<input type="radio" id="SITE_NO_MOBILE" onChange="SITE=this.value" name="site" value="False">united.com
+						<br>
+						<input type="radio" id="SITE_MOBILE" onChange="SITE=this.value" name="site" value="True">mobile.united.com
+					</td>
+					<td class="main_desc">
+						Please choose the site you wish to use.
+					</td>
+				</tr>
+				<tr>
+					<td class="main_heading">
+						Flight Number:
+					</td>
+					<td>
+						<input type="text" id="FLN" onChange="FLN=this.value">
+					</td>
+					<td class="main_desc">
+						Please input your flight number without the preceeding "UA".
+					</td>
+				</tr>
+				<tr>
+					<td class="main_heading">
+						Flight Date:
+					</td>
+					<td>
+						<input type="text" id="FLD" onChange="FLD=this.value">
+					</td>
+					<td class="main_desc">
+						The date should in the (mm/dd/yyyy) format.
+					</td>
+				</tr>
+				<tr>
+					<td class="main_heading">
+						Origin:
+					</td>
+					<td>
+						<input type="text" id="FSO" onChange="FSO=this.value">
+					</td>
+					<td class="main_desc">
+						Use the three-letter origin code (ex. LAX, SFO, EWR, JFK, FRA, MUC, NRT, HKG).
+					</td>
+				</tr>
+				<tr>
+					<td class="main_heading">
+						Destination:
+					</td>
+					<td>
+						<input type="text" id="FSD" onChange="FSD=this.value">
+					</td>
+					<td class="main_desc">
+						Use the three-letter origin code (ex. LAX, SFO, EWR, JFK, FRA, MUC, NRT, HKG).
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<input class="thesubmit" type="button" value="Submit" onClick="update_link(); parent.location=LINK">
+					</td>
+				</tr>
+			</table>
+		</form>
+		<br>
+		<script type="text/javascript">
+			document.getElementById("FLN").value = FLN;
+			document.getElementById("FLD").value = FLD;
+			document.getElementById("FSO").value = FSO;
+			document.getElementById("FSD").value = FSD;
+			if("True" == SITE) {
+				document.getElementById("SITE_NO_MOBILE").checked=false;
+				document.getElementById("SITE_MOBILE").checked=true;
+			} else {
+				document.getElementById("SITE_NO_MOBILE").checked=true;
+				document.getElementById("SITE_MOBILE").checked=false;
+			}
+
+			var cookies = get_cookies_array();
+			document.write("<h3>Previous queries</h3>");
+			document.write("<p style='color:red'><b>");
+			document.write("! Please enable cookies to save previous queries !");
+			document.write("<br></b></p>");
+			document.write("<form action='get'>");
+			document.write("<table class='results'>");
+			document.write("<tr>");
+			document.write("<th></th>");
+			document.write("<th>Mobile Site</th>");
+			document.write("<th>Flight Number</th>");
+			document.write("<th>Date</th>");
+			document.write("<th>Origin</th>");
+			document.write("<th>Destination</th>");
+			document.write("<th>Link</th>");
+			document.write("</tr>");
+			for(var i = 0; i < cookies[0].length; i++) {
+				var name = cookies[0][i];
+				var value = cookies[1][i];
+				C_NAME=name;
+				document.write("<tr class='results_tr'>");
+				document.write("<td>");
+				document.write("<input type='button' value='Remove' onClick='delete_cookie(); document.location.reload(true);'>");
+				document.write("</td>");
+				var split = name.split("_");
+				for (var j = 0; j < split.length; j++) {
+					document.write("<td>");
+					document.write(split[j]);
+					document.write("</td>");
+				}
+				document.write("<td>");
+				document.write("<a href='"+value+"'>Click Here</a>");
+				document.write("</td>");
+				document.write("</tr>");
+			}
+			document.write("<tr class='results_tr_alt'>");
+			document.write("<td colspan='7'>");
+			document.write("<input type='button' value='Clear' onClick='delete_all_cookies(); document.location.reload(true)'>");
+			document.write("</td>");
+			document.write("</tr>");
+			document.write("</table>");
+			document.write("</form>");
+		</script>
+	</body>
+</html>

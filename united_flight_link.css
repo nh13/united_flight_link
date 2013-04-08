@@ -1,0 +1,54 @@
+h1.pagetitle {
+	color: 08088A;
+}
+
+.main td, .main th {
+	padding: 0.5em;
+}
+
+.main {
+	width: 100%;
+}
+
+.main, .main td, .main th {
+	border: 1px solid #999999;
+	border-collapse:collapse;
+	background:#ccc;color:#009
+}
+
+td.main_heading {
+	background-color: #003399;
+	color: #FFFFFF;
+	vertical-align: bottom;
+	border: 1px solid #999999;
+}
+
+input.thesubmit {
+	font-size: 20px;
+}
+
+.results, .results.td, .results.th, results.tr {
+	text-align:center;
+	width: 100%;
+	background-color: #003399;
+	color: #FFFFFF;
+	border: 1px solid #999999;
+	border-collapse:collapse;
+}
+	
+td, th { 
+	padding: 5px;
+	padding-right:15px;
+	padding-left:15px;
+	border: 1px solid #999999;
+}
+	
+tr.results_tr {
+	border: 1px solid #999999;
+	background: white;
+	color: black;
+}
+
+tr.results_tr_alt {
+	background:#ccc;color:#009
+}
